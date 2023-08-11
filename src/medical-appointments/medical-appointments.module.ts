@@ -7,6 +7,9 @@ import {
   MedicalAppointmentSchema,
 } from './entities/medical-appointment.entity';
 import { PrescriptionsModule } from './prescriptions.module';
+import { MedicalTestsModule } from './medical-tests.module';
+import { MedicalTestsController } from './medical-tests.controller';
+import { MedicalTestsService } from './medical-tests.service';
 
 @Module({
   imports: [
@@ -17,8 +20,9 @@ import { PrescriptionsModule } from './prescriptions.module';
       },
     ]),
     PrescriptionsModule,
+    MedicalTestsModule,
   ],
-  controllers: [MedicalAppointmentsController],
-  providers: [MedicalAppointmentsService],
+  controllers: [MedicalAppointmentsController, MedicalTestsController],
+  providers: [MedicalAppointmentsService, MedicalTestsService],
 })
 export class MedicalAppointmentsModule {}
