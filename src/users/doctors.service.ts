@@ -19,7 +19,7 @@ export class DoctorsService {
   }
 
   async findOne(id: string) {
-    const doctor = await this.model.findById(id);
+    const doctor = await this.model.findById(id).populate('specialties');
 
     if (!doctor) {
       throw new NotFoundException(`Doctor #${id} not found.`);

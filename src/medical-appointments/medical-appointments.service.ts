@@ -1,26 +1,78 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
 import { CreateMedicalAppointmentDto } from './dto/create-medical-appointment.dto';
 import { UpdateMedicalAppointmentDto } from './dto/update-medical-appointment.dto';
+import { MedicalAppointment } from './entities/medical-appointment.entity';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class MedicalAppointmentsService {
-  create(createMedicalAppointmentDto: CreateMedicalAppointmentDto) {
-    return 'This action adds a new medicalAppointment';
+  constructor(
+    @InjectModel(MedicalAppointment.name)
+    private model: Model<MedicalAppointment>,
+  ) {}
+
+  async create(createMedicalAppointmentDto: CreateMedicalAppointmentDto) {
+    const newMedicalAppointment = new this.model(createMedicalAppointmentDto);
+    return await newMedicalAppointment.save();
   }
 
-  findAll() {
-    return `This action returns all medicalAppointments`;
+  async findAll() {
+    return await this.model
+      .find()
+      .populate({
+        path: 'doctor',
+        populate: {
+          path: 'specialties',
+          model: 'MedicalSpeciality',
+        },
+      })
+      .populate('patient');
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} medicalAppointment`;
+  async findOne(id: string) {
+    const medicalAppointment = await this.model
+      .findById(id)
+      .populate({
+        path: 'doctor',
+        populate: {
+          path: 'specialties',
+          model: 'MedicalSpeciality',
+        },
+      })
+      .populate('patient');
+
+    if (!medicalAppointment) {
+      throw new NotFoundException(`Medical Appointment #${id} not found.`);
+    }
+
+    return medicalAppointment;
   }
 
-  update(id: number, updateMedicalAppointmentDto: UpdateMedicalAppointmentDto) {
-    return `This action updates a #${id} medicalAppointment`;
+  async update(
+    id: string,
+    updateMedicalAppointmentDto: UpdateMedicalAppointmentDto,
+  ) {
+    const medicalAppointment = await this.model.findByIdAndUpdate(
+      id,
+      { $set: updateMedicalAppointmentDto },
+      { new: true },
+    );
+
+    if (!medicalAppointment) {
+      throw new NotFoundException(`Medical Appointment #${id} not found.`);
+    }
+
+    return medicalAppointment;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} medicalAppointment`;
+  async remove(id: string) {
+    const medicalAppointment = await this.model.findByIdAndRemove(id);
+
+    if (!medicalAppointment) {
+      throw new NotFoundException(`Medical Appointment #${id} not found.`);
+    }
+
+    return medicalAppointment;
   }
 }
