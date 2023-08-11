@@ -6,6 +6,7 @@ import {
   MedicalAppointment,
   MedicalAppointmentSchema,
 } from './entities/medical-appointment.entity';
+import { PrescriptionsModule } from './prescriptions.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import {
         schema: MedicalAppointmentSchema,
       },
     ]),
+    PrescriptionsModule,
   ],
   controllers: [MedicalAppointmentsController],
   providers: [MedicalAppointmentsService],

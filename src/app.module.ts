@@ -9,6 +9,7 @@ import { MedicalRecordsModule } from './medical-records/medical-records.module';
 import { MedicalCentersModule } from './medical-centers/medical-centers.module';
 import { MedicalInsuranceModule } from './medical-insurance/medical-insurance.module';
 import { ConfigModule } from '@nestjs/config';
+import { MedicinesModule } from './medicines/medicines.module';
 import config from './config';
 import * as Joi from 'joi';
 
@@ -34,6 +35,7 @@ import * as Joi from 'joi';
     MedicalRecordsModule,
     MedicalCentersModule,
     MedicalInsuranceModule,
+    MedicinesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
