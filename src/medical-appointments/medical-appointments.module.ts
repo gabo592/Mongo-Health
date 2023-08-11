@@ -8,8 +8,6 @@ import {
 } from './entities/medical-appointment.entity';
 import { PrescriptionsModule } from './prescriptions.module';
 import { MedicalTestsModule } from './medical-tests.module';
-import { MedicalTestsController } from './medical-tests.controller';
-import { MedicalTestsService } from './medical-tests.service';
 
 @Module({
   imports: [
@@ -22,7 +20,7 @@ import { MedicalTestsService } from './medical-tests.service';
     PrescriptionsModule,
     MedicalTestsModule,
   ],
-  controllers: [MedicalAppointmentsController, MedicalTestsController],
-  providers: [MedicalAppointmentsService, MedicalTestsService],
+  controllers: [MedicalAppointmentsController],
+  providers: [MedicalAppointmentsService],
 })
 export class MedicalAppointmentsModule {}
