@@ -1,26 +1,56 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
 import { CreateMedicalCenterDto } from './dto/create-medical-center.dto';
 import { UpdateMedicalCenterDto } from './dto/update-medical-center.dto';
+import { MedicalCenter } from './entities/medical-center.entity';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class MedicalCentersService {
-  create(createMedicalCenterDto: CreateMedicalCenterDto) {
-    return 'This action adds a new medicalCenter';
+  constructor(
+    @InjectModel(MedicalCenter.name) private model: Model<MedicalCenter>,
+  ) {}
+
+  async create(createMedicalCenterDto: CreateMedicalCenterDto) {
+    const newMedicalCenter = new this.model(createMedicalCenterDto);
+    return await newMedicalCenter.save();
   }
 
-  findAll() {
-    return `This action returns all medicalCenters`;
+  async findAll() {
+    return await this.model.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} medicalCenter`;
+  async findOne(id: string) {
+    const medicalCenter = await this.model.findById(id);
+
+    if (!medicalCenter) {
+      throw new NotFoundException(`Medical Center #${id} not found.`);
+    }
+
+    return medicalCenter;
   }
 
-  update(id: number, updateMedicalCenterDto: UpdateMedicalCenterDto) {
-    return `This action updates a #${id} medicalCenter`;
+  async update(id: string, updateMedicalCenterDto: UpdateMedicalCenterDto) {
+    const medicalCenter = await this.model.findByIdAndUpdate(
+      id,
+      { $set: updateMedicalCenterDto },
+      { new: true },
+    );
+
+    if (!medicalCenter) {
+      throw new NotFoundException(`Medical Center #${id} not found.`);
+    }
+
+    return medicalCenter;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} medicalCenter`;
+  async remove(id: string) {
+    const medicalCenter = await this.model.findByIdAndRemove(id);
+
+    if (!medicalCenter) {
+      throw new NotFoundException(`Medical Center #${id} not found.`);
+    }
+
+    return medicalCenter;
   }
 }
