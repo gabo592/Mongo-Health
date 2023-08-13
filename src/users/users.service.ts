@@ -4,6 +4,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { Model } from 'mongoose';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -11,6 +12,8 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto) {
     const newUser = new this.model(createUserDto);
+    const hashPassword = await bcrypt.hash(newUser.password, 10);
+    newUser.password = hashPassword;
     return await newUser.save();
   }
 
@@ -23,6 +26,16 @@ export class UsersService {
 
     if (!user) {
       throw new NotFoundException(`User #${id} not found.`);
+    }
+
+    return user;
+  }
+
+  async findByEmail(email: string) {
+    const user = await this.model.findOne({ email });
+
+    if (!user) {
+      throw new NotFoundException(`User with email: ${email} not found.`);
     }
 
     return user;
