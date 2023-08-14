@@ -25,7 +25,7 @@ import { Roles } from 'src/auth/models/role.model';
 export class MedicinesController {
   constructor(private readonly medicinesService: MedicinesService) {}
 
-  @Role(Roles.ADMIN)
+  @Role(Roles.ADMIN, Roles.DOCTOR)
   @Post()
   create(@Body() createMedicineDto: CreateMedicineDto) {
     return this.medicinesService.create(createMedicineDto);
@@ -43,6 +43,7 @@ export class MedicinesController {
     return this.medicinesService.findOne(id);
   }
 
+  @Role(Roles.ADMIN, Roles.DOCTOR)
   @Patch(':id')
   update(
     @Param('id', MongoIdPipe) id: string,
@@ -51,6 +52,7 @@ export class MedicinesController {
     return this.medicinesService.update(id, updateMedicineDto);
   }
 
+  @Role(Roles.ADMIN, Roles.DOCTOR)
   @Delete(':id')
   remove(@Param('id', MongoIdPipe) id: string) {
     return this.medicinesService.remove(id);

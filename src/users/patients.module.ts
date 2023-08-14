@@ -4,6 +4,7 @@ import { PatientsService } from './patients.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Patient, PatientSchema } from './entities/patient.entity';
 import { DoctorsModule } from './doctors.module';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
   imports: [
@@ -13,6 +14,9 @@ import { DoctorsModule } from './doctors.module';
         schema: PatientSchema,
       },
     ]),
+    MulterModule.register({
+      dest: './uploads',
+    }),
     DoctorsModule,
   ],
   controllers: [PatientsController],
