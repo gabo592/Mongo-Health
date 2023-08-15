@@ -10,6 +10,7 @@ import { MedicalCentersModule } from './medical-centers/medical-centers.module';
 import { MedicalInsuranceModule } from './medical-insurance/medical-insurance.module';
 import { ConfigModule } from '@nestjs/config';
 import { MedicinesModule } from './medicines/medicines.module';
+import { ImagesModule } from './images/images.module';
 import config from './config';
 import * as Joi from 'joi';
 
@@ -37,6 +38,7 @@ import * as Joi from 'joi';
     MedicalCentersModule,
     MedicalInsuranceModule,
     MedicinesModule,
+    ImagesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
